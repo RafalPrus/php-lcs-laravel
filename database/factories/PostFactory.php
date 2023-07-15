@@ -30,9 +30,8 @@ class PostFactory extends Factory
             'user_id' => User::factory(),
             'title' => fake()->sentence(),
             'slug' => fake()->slug(),
-            'excerpt' => fake()->sentence(),
-            'body' => fake()->paragraph()
-
+            'excerpt' => fake()->paragraphs(2, true),
+            'body' => fake()->paragraphs(6, true)
         ];
     }
 }
