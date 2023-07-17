@@ -19,17 +19,17 @@ class SessionsController extends Controller
 
         ]);
 
-        if (auth()->attempt($attributes)) {
-            session()->regenerate();
-            
-            return redirect('/')->with('success', 'Welcome back :) !');
+        if (! auth()->attempt($attributes)) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'email' => 'The provided email or password is incorrect',
+                ]);
         }
 
-        return back()
-            ->withInput()
-            ->withErrors([
-            'email' => 'The provided email or password is incorrect',
-        ]);
+        session()->regenerate();
+
+        return redirect('/')->with('success', 'Welcome back :) !');
 
 
     }
