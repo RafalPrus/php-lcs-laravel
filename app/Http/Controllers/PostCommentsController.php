@@ -22,6 +22,6 @@ class PostCommentsController extends Controller
             ]
         );
 
-        return back();
+        return back()->with('success', 'Comment added!');
     }
 }

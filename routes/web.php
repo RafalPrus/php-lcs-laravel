@@ -22,6 +22,21 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 |
 */
 
+Route::get('ping', function () {
+    $mailchimp = new \MailchimpMarketing\ApiClient();
+
+    $mailchimp->setConfig([
+        'apiKey' => config('services.mailchimp.key'),
+        'server' => 'us13'
+    ]);
+
+    $response = $mailchimp->lists->addListMember('a70a7c2a33', [
+        'email_address' => 'rara@rgs.pl',
+        'status' => 'subscribed'
+    ]);
+    ddd($response);
+});
+
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('posts/{post:slug}', [PostController::class, 'show']);
 Route::post('posts/{post:slug}/comments', [PostCommentsController::class, 'store']);
