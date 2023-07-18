@@ -30,6 +30,23 @@ class PostController extends Controller
         return view('posts.create');
     }
 
+    public function store()
+    {
+        $attibutes = request()->validate([
+            'title' => 'required',
+            'slug' => 'required|Unique:posts,slug',
+            'excerpt' => 'required',
+            'body' => 'required',
+            'category_id' => 'required|Exists:categories,id'
+        ]);
+
+        $attibutes['user_id'] = auth()->id();
+
+        Post::create($attibutes);
+
+        return redirect('/')->with('success', 'You just added new post!');
+    }
+
 
 
 }
