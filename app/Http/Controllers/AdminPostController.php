@@ -22,14 +22,7 @@ class AdminPostController extends Controller
 
     public function store()
     {
-        $attibutes = request()->validate([
-            'title' => 'required',
-            'thumbnail' => 'required|image',
-            'slug' => 'required|Unique:posts,slug',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => 'required|Exists:categories,id'
-        ]);
+        $attibutes = $this->validatePost();
 
 
 
@@ -50,14 +43,7 @@ class AdminPostController extends Controller
 
     public function update(Post $post)
     {
-        $attibutes = request()->validate([
-            'title' => 'required',
-            'thumbnail' => 'image',
-            'slug' => ['required', Rule::unique('posts', 'slug')->ignore($post->id)],
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => 'required|Exists:categories,id'
-        ]);
+        $attibutes = $this->validatePost($post);
 
         if (isset($attibutes['thumbnail'])) {
             $attibutes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
@@ -73,5 +59,21 @@ class AdminPostController extends Controller
         $post->delete();
 
         return redirect('/admin/posts')->with('success', "Post deleted!");
+    }
+
+    protected function validatePost(?Post $post = null): array
+    {
+        $post ??= new Post();
+
+        $attibutes = request()->validate([
+            'title' => 'required',
+            'thumbnail' => $post->exists ? ['image'] : ['required', 'image'],
+            'slug' => ['required', Rule::unique('posts', 'slug')->ignore($post)],
+            'excerpt' => 'required',
+            'body' => 'required',
+            'category_id' => 'required|Exists:categories,id'
+        ]);
+
+        return $attibutes;
     }
 }
