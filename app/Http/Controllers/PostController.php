@@ -25,31 +25,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return view('posts.create');
-    }
 
-    public function store()
-    {
-        $attibutes = request()->validate([
-            'title' => 'required',
-            'thumbnail' => 'required|image',
-            'slug' => 'required|Unique:posts,slug',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => 'required|Exists:categories,id'
-        ]);
-
-
-
-        $attibutes['user_id'] = auth()->id();
-        $attibutes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
-
-        Post::create($attibutes);
-
-        return redirect('/')->with('success', "You just added new post!");
-    }
 
 
 
